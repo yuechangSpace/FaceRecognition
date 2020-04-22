@@ -1,4 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## About this project
+
+This is a web project that  allow user to do face recoginition of the image they choose.
 
 ## Available Scripts
 
