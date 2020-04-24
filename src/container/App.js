@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Navigation from '../components/Navigation/Navigation.js';
 import Logo from '../components/Logo/Logo.js';
+import TakePic from '../components/TakePic/TakePic.js';
 import ImgLinkForm from '../components/ImgLinkForm/ImgLinkForm.js';
 import Image from '../components/Image/Image.js';
 import Particles from 'react-particles-js';
@@ -15,7 +16,7 @@ const app = new Clarifai.App({
 const particleParams = {
 	    "particles": {
 	        "number": {
-	            "value": 50
+	            "value": 100
 	        },
 	        "size": {
 	            "value": 3
@@ -37,8 +38,21 @@ class App extends Component{
 		this.state={
 			url:'',
 			box:[],
-			route:''
+			route:'home',
+			pic:{}
 		}
+	}
+
+	onButtonTakePic = () => {
+		this.setState({route:'takingpic'})
+		console.log("taking")
+	}
+
+	onButtonFinishPic = (Obj) =>{
+		this.setState({pic:Obj})
+		this.setState({route:'home'})
+		this.setState({url:Obj.base64})
+		console.log(this.state.url)
 	}
 
 	calculateBoxPos = ({top_row,left_col,bottom_row,right_col})=>{
@@ -54,37 +68,50 @@ class App extends Component{
 	}
 
 	onButtonSubmit = () => {
-      	app.models.predict("a403429f2ddf4b49b307e318f00e528b", this.state.url)
-        .then(response => {
-        //regions has two array
-        //{top_row: 0.110837825, left_col: 0.30422476, bottom_row: 0.48536083, right_col: 0.47590622}
-        const res = this.calculateBoxPos(response.outputs[0].data.regions[0].region_info.bounding_box)
-        this.setState({box:res})
-        })
-        .catch(err => {
-          console.log(err);
-        });
+			let uri = this.state.url;
+			//handle the pic took from the user
+			if (uri.includes("base64")){
+				uri = uri.substring(22);
+			}
+	      	app.models.predict("a403429f2ddf4b49b307e318f00e528b", uri)
+	        .then(response => {
+	        //regions has two array
+	        //{top_row: 0.110837825, left_col: 0.30422476, bottom_row: 0.48536083, right_col: 0.47590622}
+	        const res = this.calculateBoxPos(response.outputs[0].data.regions[0].region_info.bounding_box)
+	        this.displayBox(res);
+	        })
+	        .catch(err => {
+	          console.log(err);
+	        });
 	  }
 
+	displayBox = (box_arr) =>{
+		this.setState({box:box_arr})
+	}
 	onInput= (event) => {
 		this.setState({url:event.target.value})
 	}
 
   render(){
-  	console.log(this.state.box)
+  	console.log(this.state.pic)
   	return(
-  		<div>
-			<Particles className='particles' params={particleParams} />
-	    	<Navigation />
-	    	<Logo className='particles'/>
-	    	<h1 className='center'> Smart Brain </h1>
-	    	<ImgLinkForm onInput={this.onInput} onButtonSubmit={this.onButtonSubmit}/>
-	    	<Image boundingBox={this.state.box} url={this.state.url} />
-		{/*	
-		
-		<h1> Smart Brain </h1>
-	    <ImgLinkForm />
-	    <Image />*/}
+  		<div>{
+  			(this.state.route === 'takingpic')
+  			?<TakePic onButtonFinishPic={this.onButtonFinishPic}/>
+  			:(this.state.route === 'home')
+  			?(
+  			<div>
+	  			<Particles className='particles' params={particleParams} />
+		    	<Navigation />
+		    	<Logo className='particles'/>
+		    	<h1 className='center'> Smart Brain </h1>
+		    	<ImgLinkForm onButtonTakePic={this.onButtonTakePic} onInput={this.onInput} onButtonSubmit={this.onButtonSubmit}/>
+		    	<Image boundingBox={this.state.box} url={this.state.url} />
+	    	</div>
+	    	)
+	    	:<Image boundingBox={this.state.box} url={this.state.url} />
+  		}
+
     </div>
     );
   }
