@@ -7,11 +7,11 @@ import Particles from 'react-particles-js';
 import Clarifai from 'clarifai'
 import 'tachyons';
 import './App.css'
+
 //copy your api key here
 const app = new Clarifai.App({
  apiKey: 'd6eea73651224ec8b4892e677d7a4f52'
 });
-
 const particleParams = {
 	    "particles": {
 	        "number": {
@@ -36,25 +36,30 @@ class App extends Component{
 		super()
 		this.state={
 			url:'',
+			box:[],
 			route:''
 		}
 	}
+
 	calculateBoxPos = ({top_row,left_col,bottom_row,right_col})=>{
 		const img = document.querySelector('.inputImg');
 		const width = Number(img.width);
 		const height = Number(img.height);
 		//[41.32348785, 98.848272, 165.080531, 191.816391]
-		console.log([top_row*height, left_col*width, bottom_row*height, right_col*width])
-		return [top_row*height, left_col*width, bottom_row*height, right_col*width];
+		// console.log([top_row*height, left_col*width, bottom_row*height, right_col*width])
+		return [top_row*height, 
+		left_col*width, 
+		height - bottom_row*height, 
+		width - right_col*width];
 	}
 
 	onButtonSubmit = () => {
       	app.models.predict("a403429f2ddf4b49b307e318f00e528b", this.state.url)
         .then(response => {
-        	//regions has two array
-        	//{top_row: 0.110837825, left_col: 0.30422476, bottom_row: 0.48536083, right_col: 0.47590622}
-          // console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
-          this.calculateBoxPos(response.outputs[0].data.regions[0].region_info.bounding_box)
+        //regions has two array
+        //{top_row: 0.110837825, left_col: 0.30422476, bottom_row: 0.48536083, right_col: 0.47590622}
+        const res = this.calculateBoxPos(response.outputs[0].data.regions[0].region_info.bounding_box)
+        this.setState({box:res})
         })
         .catch(err => {
           console.log(err);
@@ -66,6 +71,7 @@ class App extends Component{
 	}
 
   render(){
+  	console.log(this.state.box)
   	return(
   		<div>
 			<Particles className='particles' params={particleParams} />
@@ -73,7 +79,7 @@ class App extends Component{
 	    	<Logo className='particles'/>
 	    	<h1 className='center'> Smart Brain </h1>
 	    	<ImgLinkForm onInput={this.onInput} onButtonSubmit={this.onButtonSubmit}/>
-	    	<Image url={this.state.url} />
+	    	<Image boundingBox={this.state.box} url={this.state.url} />
 		{/*	
 		
 		<h1> Smart Brain </h1>
