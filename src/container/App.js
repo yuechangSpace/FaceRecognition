@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Navigation from '../components/Navigation/Navigation.js';
+import Register from '../components/Navigation/Register.js';
+import Signin from '../components/Navigation/Signin.js';
 import Logo from '../components/Logo/Logo.js';
 import TakePic from '../components/TakePic/TakePic.js';
 import ImgLinkForm from '../components/ImgLinkForm/ImgLinkForm.js';
@@ -38,14 +40,23 @@ class App extends Component{
 		this.state={
 			url:'',
 			box:[],
-			route:'home',
+			route:'register',
 			pic:{}
 		}
 	}
-
+	onButtonNav = (route) =>{
+		console.log(route)
+		this.setState({route:route});
+	}
+	//redundant functions
 	onButtonTakePic = () => {
 		this.setState({route:'takingpic'})
 		console.log("taking")
+	}
+
+	onButtonBackHome = () => {
+		this.setState({route:'home'})
+		console.log(this.state.route)
 	}
 
 	onButtonFinishPic = (Obj) =>{
@@ -93,16 +104,33 @@ class App extends Component{
 	}
 
   render(){
-  	console.log(this.state.pic)
+  	console.log(this.state.route)
+ //  	let nav;
+	if(this.state.route === 'register'){
+
+		return (
+			<div>
+			<Navigation onButtonNav={this.onButtonNav}/>
+			<Register onButtonNav={this.onButtonNav}/>
+			</div>);
+	}
+	else if(this.state.route === 'signin'){
+		return (
+			<div>
+			<Navigation onButtonNav={this.onButtonNav}/>
+			<Signin onButtonNav={this.onButtonNav}/>
+			</div>);
+	}
+
   	return(
   		<div>{
   			(this.state.route === 'takingpic')
-  			?<TakePic onButtonFinishPic={this.onButtonFinishPic}/>
-  			:(this.state.route === 'home')
+  			?<TakePic onButtonBackHome={this.onButtonBackHome} onButtonFinishPic={this.onButtonFinishPic}/>
+  			:(this.state.route === 'home' || 'signedin')
   			?(
   			<div>
 	  			<Particles className='particles' params={particleParams} />
-		    	<Navigation />
+		    	<Navigation onButtonNav={this.onButtonNav} route={this.state.route}/>
 		    	<Logo className='particles'/>
 		    	<h1 className='center'> Smart Brain </h1>
 		    	<ImgLinkForm onButtonTakePic={this.onButtonTakePic} onInput={this.onInput} onButtonSubmit={this.onButtonSubmit}/>
@@ -111,7 +139,6 @@ class App extends Component{
 	    	)
 	    	:<Image boundingBox={this.state.box} url={this.state.url} />
   		}
-
     </div>
     );
   }

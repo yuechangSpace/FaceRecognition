@@ -2,8 +2,7 @@ import React from 'react';
 import './Image.css'
 
 const Image = ({ boundingBox, url })=>{
-	const width='100px';
-	const height= '100px';
+
   return (
     <div className='center'>
     	<div className='absolute'>
@@ -12,7 +11,7 @@ const Image = ({ boundingBox, url })=>{
 		    	left:boundingBox[1],
 		    	bottom:boundingBox[2], 
 		    	right:boundingBox[3]}}>
-		</div>
+			</div>
 	    </div>
     </div>
   );

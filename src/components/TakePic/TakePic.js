@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImagePreview from './ImagePreview'; // source code : ./src/demo/AppWithImagePreview/ImagePreview
-import Clarifai from 'clarifai'
-
-const app = new Clarifai.App({
- apiKey: 'd6eea73651224ec8b4892e677d7a4f52'
-});
 
 function TakePic (props) {
   const [dataUri, setDataUri] = useState('');
@@ -28,15 +23,20 @@ function TakePic (props) {
   return (
     <div>
       { (imgDone)
-        ? <img src={dataUri}/>
+        ?<div> 
+          <img src={dataUri} alt=''/>
+        </div>
         : (
         (dataUri)
           ? <ImagePreview dataUri={dataUri}
             isFullscreen={isFullscreen}
           />
-          : <Camera onTakePhotoAnimationDone = {handleTakePhotoAnimationDone}
-            isFullscreen={isFullscreen}
-          />
+          :<div>
+            <button onClick={props.onButtonBackHome} className=' grow  br5 ba'>❌</button> 
+            <Camera onTakePhotoAnimationDone = {handleTakePhotoAnimationDone}
+              isFullscreen={isFullscreen}
+            />
+          </div>
         )
       }
     </div>
