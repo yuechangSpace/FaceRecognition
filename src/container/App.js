@@ -3,6 +3,7 @@ import Navigation from '../components/Navigation/Navigation.js';
 import Register from '../components/Navigation/Register.js';
 import Signin from '../components/Navigation/Signin.js';
 import Logo from '../components/Logo/Logo.js';
+import Profile from '../components/Profile/Profile.js';
 import TakePic from '../components/TakePic/TakePic.js';
 import ImgLinkForm from '../components/ImgLinkForm/ImgLinkForm.js';
 import Image from '../components/Image/Image.js';
@@ -33,19 +34,28 @@ const particleParams = {
 	        }
 	    }
 	};
-
-class App extends Component{
-	constructor(){
-		super()
-		this.state={
+const initialState = {
 			url:'',
 			box:[],
 			route:'register',
-			pic:{}
-		}
+			user:{
+					id:"",
+					name:"",
+					email:"",
+					passwd:"",
+					entries:0,
+					date : new Date()
+			}
 	}
+class App extends Component{
+	constructor(){
+		super()
+		this.state=initialState
+		}
+	
+
 	onButtonNav = (route) =>{
-		console.log(route)
+		if (route === 'home') this.setState(initialState)
 		this.setState({route:route});
 	}
 	//redundant functions
@@ -55,13 +65,21 @@ class App extends Component{
 	}
 
 	onButtonBackHome = () => {
-		this.setState({route:'home'})
+		if (this.state.user.email !== ""){
+			this.setState({route:'signedin'})
+		}else{
+			this.setState({route:'home'})
+		}
 		console.log(this.state.route)
 	}
 
 	onButtonFinishPic = (Obj) =>{
 		this.setState({pic:Obj})
-		this.setState({route:'home'})
+		if (this.state.user.id !== ""){
+			this.setState({route:'signedin'})
+		}else{
+			this.setState({route:'home'})
+		}
 		this.setState({url:Obj.base64})
 		console.log(this.state.url)
 	}
@@ -84,7 +102,27 @@ class App extends Component{
 			if (uri.includes("base64")){
 				uri = uri.substring(22);
 			}
-	      	app.models.predict("a403429f2ddf4b49b307e318f00e528b", uri)
+	      	// app.models.predict("a403429f2ddf4b49b307e318f00e528b", uri)
+	       //  .then(response => {
+	       //  //regions has two array
+	       //  //{top_row: 0.110837825, left_col: 0.30422476, bottom_row: 0.48536083, right_col: 0.47590622}
+	       //  const res = this.calculateBoxPos(response.outputs[0].data.regions[0].region_info.bounding_box)
+	       //  this.displayBox(res);
+	       //  })
+	       //  .catch(err => {
+	       //    console.log(err);
+	       //  });
+		    fetch("http://localhost:4000/image",{
+		      method:"post",
+		      headers:{
+		        'content-type': 'application/json'
+		      },
+
+		      body:JSON.stringify({
+					"uri":uri
+		      })
+		    })
+	        .then(response => response.json())
 	        .then(response => {
 	        //regions has two array
 	        //{top_row: 0.110837825, left_col: 0.30422476, bottom_row: 0.48536083, right_col: 0.47590622}
@@ -103,22 +141,31 @@ class App extends Component{
 		this.setState({url:event.target.value})
 	}
 
+	onButtonSign = (user)=>{
+		this.setState(Object.assign(this.state.user,{name:user.name,email:user.email,id:user.id,date:user.date,entries:user.entries}))
+	}
+
+	getProfile = ()=>{
+		fetch(`http://localhost:4000/profile/${this.state.user.id}`)
+		.then()
+	}
   render(){
   	console.log(this.state.route)
+  	console.log(this.state.user)
  //  	let nav;
 	if(this.state.route === 'register'){
 
 		return (
 			<div>
 			<Navigation onButtonNav={this.onButtonNav}/>
-			<Register onButtonNav={this.onButtonNav}/>
+			<Register onButtonSign={this.onButtonSign} onButtonNav={this.onButtonNav}/>
 			</div>);
 	}
 	else if(this.state.route === 'signin'){
 		return (
 			<div>
 			<Navigation onButtonNav={this.onButtonNav}/>
-			<Signin onButtonNav={this.onButtonNav}/>
+			<Signin onButtonSign={this.onButtonSign} onButtonNav={this.onButtonNav}/>
 			</div>);
 	}
 
@@ -132,6 +179,12 @@ class App extends Component{
 	  			<Particles className='particles' params={particleParams} />
 		    	<Navigation onButtonNav={this.onButtonNav} route={this.state.route}/>
 		    	<Logo className='particles'/>
+		    	{(this.state.route === 'signedin')?
+		    		<div className='center grow'>
+		    			<Profile  user={this.state.user}/>
+		    		</div>
+		    		:<div />
+		    	}
 		    	<h1 className='center'> Smart Brain </h1>
 		    	<ImgLinkForm onButtonTakePic={this.onButtonTakePic} onInput={this.onInput} onButtonSubmit={this.onButtonSubmit}/>
 		    	<Image boundingBox={this.state.box} url={this.state.url} />
