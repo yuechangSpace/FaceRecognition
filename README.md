@@ -4,17 +4,17 @@ This is a web project that allow users to do a face recoginition of the image th
 
 ## Showcase
 Register<br /> 
-![register](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/register.png)
+![register](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/register.png)<br /> 
 Sign in<br /> 
-![signin](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/signin.png)
+![signin](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/signin.png)<br /> 
 Home <br /> 
-![home](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/home.png)
+![home](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/home.png)<br /> 
 Copy a url then to be detected<br /> 
-![url](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/copyUrl.png)
+![url](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/copyUrl.png)<br /> 
 Or simply take a picture of yourself :)<br /> 
-![takePic](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/takePic.png)
+![takePic](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/takePic.png)<br /> 
 Then click detect, it will outline the face detected.<br /> 
-![detect](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/detect.png)
+![detect](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/detect.png)<br /> 
 
 ## Project Structure
 ```
