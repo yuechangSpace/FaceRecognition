@@ -3,17 +3,17 @@ This is a front end project built with React JS.
 This is a web project that allow users to do a face recoginition of the image they choose.
 
 ## Showcase
-Register>
+Register<br /> 
 ![register](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/register.png)
-Sign in>
+Sign in<br /> 
 ![signin](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/signin.png)
-Home >
+Home <br /> 
 ![home](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/home.png)
-Copy a url then to be detected>
+Copy a url then to be detected<br /> 
 ![url](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/copyUrl.png)
-Or simply take a picture of yourself :)>
+Or simply take a picture of yourself :)<br /> 
 ![takePic](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/takePic.png)
-Then click detect, it will outline the face detected.>
+Then click detect, it will outline the face detected.<br /> 
 ![detect](https://github.com/yuechangSpace/FaceRecognition/blob/master/Screenshots/detect.png)
 
 ## Project Structure
